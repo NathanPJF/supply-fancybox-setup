@@ -1,0 +1,248 @@
+<style>
+.container{
+  margin-top: 40px;
+  margin-bottom: 40px;
+  max-width: 1170px;  
+}
+
+article{
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+img{
+  max-width: 100%;
+}
+
+code {
+padding: 2px 4px;
+font-size: 90%;
+color: #c7254e;
+background-color: #f9f2f4;
+border-radius: 4px;
+}
+
+pre code{
+display: block;
+padding: 9.5px;
+margin: 0 0 10px;
+font-size: 13px;
+line-height: 1.42857143;
+color: #333;
+word-break: break-all;
+word-wrap: break-word;
+background-color: #f5f5f5;
+border: 1px solid #ccc;
+border-radius: 4px;
+}
+
+</style>
+
+<div class="container">
+  <article class="col-xs-12">
+<p>Hi, there</p>
+
+<p>I&#39;m happy to help everyone with implementing a lightbox effect for their product photos on the Supply theme, but there are a couple items I feel need to be cleared up before we start.</p>
+
+<p>The first being that the Supply theme actually <strong>does not</strong> use Fancybox.  Fancybox is the name of a specific plugin from an author.  A &quot;lightbox&quot; effect is used to showcase product photos and there are a number of plugins that accomplish this like Colorbox, Slimbox or Fancybox.  If you look in the Assets folder once you&#39;ve downloaded the Supply theme, you&#39;ll see that there aren&#39;t any of the same files in there that the fancyApps website says you&#39;ll need. <a href="http://fancyapps.com/fancybox/">http://fancyapps.com/fancybox/</a></p>
+
+<p>The second item is that I won&#39;t be covering how to use the latest version of Fancybox (v 2.1.5) because that is licensed for <strong>non-commercial use</strong>.  Fancy box v2.1.5 is free for personal and non-profit websites - which would rule out the majority of Shopify websites.  If you do want to use the latest version of Fancybox, they have paid-for licensing options: http://sites.fastspring.com/fancyapps/product/store</p>
+
+<p>Third, the customization below will have the lightbox effect be the default effect for a product feature images.  If you choose to turn on &quot;Enable Image Zoom&quot; from your Customize Theme page, then that will prevent the lightbox effect from happening on click.  So this is a decision between being able to zoom in tight on photos on mouseover, or have them enlarge on click.</p>
+
+<p>The last thing I want to say is that to get Fancybox working with your Supply theme, with the ability to navigate through a gallery, and not sacrifice the option to have the zoom feature
+for Supply&#39;s product images is going to be a pretty heavy customization.  I have the steps below, and I <strong>strongly recommend</strong> you make these modifications on <a href="http://docs.shopify.com/manual/your-website/themes/export-duplicate-delete-themes#duplicate-theme">a duplicate of your theme</a> and not on your actual published theme.  You may even want to ask someone with a good amount of experience manipulating HTML and Javascript to help you out.  Once you have it working on your duplicate, it&#39;s a simple step to publish it as your public-facing theme.</p>
+
+<p><strong>Final item</strong>: If you choose to make this customization, it will be your responsibility to implement and maintain it. You&#39;ll be making changes to some pretty important files across multiple locations, so a Shopify employee won&#39;t be able to help you fix any issues that come up from implementing this.</p>
+
+<p>Cool. Here we go!</p>
+
+<p>We&#39;ll be using version 1.3.4 found at <a href="http://fancybox.net/">http://fancybox.net/</a>.</p>
+
+<h2>Step 1: Getting your files</h2>
+
+<p>Head to http://fancybox.net/howto and download the zip file by clicking &quot;Version 1.3.4&quot; or <a href="http://fancybox.googlecode.com/files/jquery.fancybox-1.3.4.zip">click this link</a>, which ever you want.</p>
+
+<p>In that zip file are some files we don&#39;t need, like an out-dated version of jQuery.  So unzip the jquery.fancybox-1.3.4.zip file, find the fancybox directory inside it.  Those are the files we want.</p>
+
+<p><img src="http://snapify.shopify.com/02-36-fbotv-zhu1u.png" alt="http://snapify.shopify.com/02-36-fbotv-zhu1u.png"></p>
+
+<p>Uploading this many files to your Asset directory can be a pain, so you may want to download your theme to your computer and upload your files offline.  You can find more information about that in our <a href="http://docs.shopify.com/support/your-website/themes/i-want-to-bulk-upload-many-files-to-my-theme-assets-do-you-have-a-bulk-upload-feature">online documentation about bulk uploads</a>.</p>
+
+<h2>Step 2: Setup your script and style files</h2>
+
+<p>In your theme.liquid file, add the following code before the closing <code>&lt;/head&gt;</code> tag so your browser has access to the files.  You won&#39;t be able to just copy-paste from <a href="http://fancybox.net/howto">fancybox.net&#39;s How To</a> because your files are in a different location than the example.</p>
+
+<p>Here is the code in liquid form that you&#39;ll want to past before the closing <code>&lt;/head&gt;</code>.</p>
+
+<pre><code>  &lt;!-- Fancybox plugin files ======== --&gt;
+  {{ &#39;jquery.fancybox-1.3.4.js&#39; | asset_url | script_tag }}
+  {{ &#39;jquery.fancybox-1.3.4.css&#39; | asset_url | stylesheet_tag }}
+
+  &lt;!-- Option: Fancybox easing transitions --&gt;
+  {{ &#39;jquery.easing-1.3.pack.js&#39; | asset_url | script_tag }}
+
+</code></pre>
+
+<p>Then at the bottom of your theme.liquid template, paste the code that will make Fancybox &quot;fire&quot;, or activate, when a customer clicks one of product featired image.  Right before your closing <code>&lt;/body&gt;</code> put the following script.</p>
+
+<pre><code>  &lt;script&gt;
+    $(document).ready(function() {
+
+    /* This is basic - uses default settings */
+
+  $(&quot;a#fancy_image&quot;).fancybox({
+    &#39;transitionIn&#39;  : &#39;fade&#39;,
+    &#39;transitionOut&#39; : &#39;fade&#39;,
+    &#39;speedIn&#39;   : 300,
+    &#39;speedOut&#39;    : 200,
+    &#39;overlayShow&#39; : true
+  });
+
+  /* Using custom settings */
+
+  $(&quot;a#inline&quot;).fancybox({
+    &#39;hideOnContentClick&#39;: true
+  });
+
+  /* Apply fancybox to multiple items */
+
+  $(&quot;a.fancy_group&quot;).fancybox({
+    &#39;transitionIn&#39;  : &#39;fade&#39;,
+    &#39;transitionOut&#39; : &#39;fade&#39;,
+    &#39;speedIn&#39;   : 300,
+    &#39;speedOut&#39;    : 200,
+    &#39;overlayShow&#39; : true
+  });
+
+});
+  &lt;/script&gt;
+</code></pre>
+
+<p>What this says is that any link elements that have the id of &quot;fancy_image&quot; or the class of &quot;fancy_group&quot; will be using the Fancybox plugin. I have the same settings being applied to both &quot;#fancy_image&quot; and &quot;.fancy_group&quot;.</p>
+
+<p>I&#39;ll talk briefly about these settings later on, but if you&#39;re curious what <code>&#39;overlayShow&#39; : true</code> actually means, check out the Options available to you at <a href="http://fancybox.net/api">http://fancybox.net/api</a>.</p>
+
+<h2>Step 3: Bug fix for the main fancybox file</h2>
+
+<p>Because this version of Fancybox was made well before our current day version of jQuery, there is a quick fix we need to make.  In your jquery.fancybox-1.3.4.js file, replace line 29 with the following:</p>
+
+<p><code>isIE6 = navigator.userAgent.match(/msie/i) &amp;&amp; navigator.userAgent.match(/6/) &amp;&amp; !window.XMLHttpRequest,</code></p>
+
+<h2>Step 4: Prep your product page images</h2>
+
+<h3>Option 1: Just one lightboxed image</h3>
+
+<p>Head to your product.liquid template and look for the lines of code where the featured product photo is referrenced.  Assuming you haven&#39;t made any code changes yet, it will be line 12.  Replace the line:
+<code>
+&lt;img id=&quot;productPhotoImg&quot; src=&quot;{{ featured_image | img_url: &#39;large&#39; }}&quot; alt=&quot;{{ featured_image.alt | escape }}&quot; {% if settings.product_image_zoom_enable %} data-zoom=&quot;{{ featured_image | img_url: &#39;1024x1024&#39; }}&quot;{% endif %}&gt;
+</code></p>
+
+<p>With these lines:</p>
+
+<pre><code>&lt;a id=&quot;fancy_image&quot; href=&quot;{{ featured_image | img_url: &#39;master&#39;}}&quot;&gt;
+   &lt;img id=&quot;productPhotoImg&quot; src=&quot;{{ featured_image | img_url: &#39;large&#39; }}&quot; alt=&quot;{{ featured_image.alt | escape }}&quot; {% if settings.product_image_zoom_enable %} data-zoom=&quot;{{ featured_image | img_url: &#39;1024x1024&#39; }}&quot;{% endif %}&gt;
+&lt;/a&gt;
+</code></pre>
+
+<h3>Option 2: Gallery images on product page</h3>
+
+<p>If we want to have visitors be able to navigate through a gallery of product images, we&#39;ll need to add the classes we defined in Step 2.</p>
+
+<p>On our featured image&#39;s <code>&lt;a&gt;</code> element, we are going add <code>class=&quot;fancy_group&quot;</code> and <code>rel=&quot;group1&quot;</code>.  We are still going to add <code>id=&quot;fancy_image&quot;</code> because it will be needed for a modification to our shop.js file later.  Those lines should now look like this:</p>
+
+<pre><code>&lt;a id=&quot;fancy_image&quot; class=&quot;fancy_group&quot; rel=&quot;group1&quot; href=&quot;{{ featured_image | img_url: &#39;master&#39;}}&quot;&gt;
+  &lt;img id=&quot;productPhotoImg&quot; src=&quot;{{ featured_image | img_url: &#39;large&#39; }}&quot; alt=&quot;{{ featured_image.alt | escape }}&quot; {% if settings.product_image_zoom_enable %} data-zoom=&quot;{{ featured_image | img_url: &#39;1024x1024&#39; }}&quot;{% endif %}&gt;
+&lt;/a&gt;
+
+</code></pre>
+
+<p>And then down in our for-loop that displays different product thumbnails, we are going to add a &quot;dummy link&quot; before each thumbnail image.  Our dummy link will be:</p>
+
+<p><code>&lt;a href=&quot;{{ image.src | img_url: &#39;master&#39; }}&quot; class=&quot;fancy_group&quot; rel=&quot;group1&quot;&gt;&lt;/a&gt;</code></p>
+
+<p>So now your for loop for images in product.images should look like this:</p>
+
+<pre><code>{% for image in product.images %}
+  &lt;li class=&quot;grid-item medium--down-one-quarter large--one-quarter&quot;&gt;
+    &lt;a href=&quot;{{ image.src | img_url: &#39;master&#39; }}&quot; class=&quot;fancy_group&quot; rel=&quot;group1&quot;&gt;&lt;/a&gt;
+    &lt;a href=&quot;{{ image.src | img_url: &#39;large&#39; }}&quot; class=&quot;product-photo-thumb&quot;&gt;
+      &lt;img src=&quot;{{ image.src | img_url: &#39;compact&#39; }}&quot; alt=&quot;{{ image.alt | escape }}&quot;&gt;
+    &lt;/a&gt;
+  &lt;/li&gt;
+{% endfor %}
+</code></pre>
+
+<p>Why did I just put in this dummy link?  Because we need a way to tell Fancybox which links are all part of the same group (&#39;group1&#39;, in this case).  I couldn&#39;t simply change the link wrapping the actual thumbnail image because then clicking that thumbnail would open a lightbox instead of changing the featured image above the thumbnails.</p>
+
+<p>Something to note: This gallery option is going to let your visitors scroll through a
+lightbox gallery of all the product photos on the screen.  This means that the featured image
+is going to show up twice in that gallery because it also appears in the list of thumbnails. Just a heads up!</p>
+
+<h4>About image sizes</h4>
+
+<p>In this setup, I&#39;ve chosen &#39;master&#39; for the image size to dispaly in the lightbox.  That
+is the largest product image size available - which is currently 2048x2048.  If you are interested
+in what your other options are, check out the <a href="http://docs.shopify.com/themes/liquid-documentation/filters/url-filters#size-parameters">parameters available here</a>.</p>
+
+<h2>Step 5: Modifiying our shop.js file</h2>
+
+<p>One of the last things we need to think about is the fact the &quot;featured image&quot;, the largest image at the top, is going to change everytime a visitor click a thumbnail image.  Therefore, we need
+to update the <code>&lt;a&gt;</code> tag around the featured image everytime the featured image changes.</p>
+
+<p>Go to your <strong>shop.js</strong> file and find the <code>timber.productImageSwitch</code> function.  This should be on line 253 if you haven&#39;t done any code changes to this file before.  You are going to add some code right before the &quot;on click&quot; event ends.  You can replace the whole <code>productImageSwitch</code> function with the following:</p>
+
+<pre><code>timber.productImageSwitch = function () {
+  if ( timber.cache.$thumbImages.length ) {
+    // Switch the main image with one of the thumbnails
+    // Note: this does not change the variant selected, just the image
+    timber.cache.$thumbImages.on(&#39;click&#39;, function(evt) {
+      evt.preventDefault();
+      var newImage = $(this).attr(&#39;href&#39;);
+      timber.switchImage(newImage, null, timber.cache.$productImage);
+
+      //New link for Fancy image
+      var $fancyImage = $(&#39;#fancy_image&#39;);
+      if ($fancyImage) {
+        var fancyLink = newImage.replace(&#39;_large.&#39;, &#39;.&#39;);
+        $fancyImage.attr(&#39;href&#39;, fancyLink);
+      }
+
+    });
+  }
+};
+</code></pre>
+
+<h2>Next steps?</h2>
+
+<p>After you&#39;ve implemented Fancybox version 1.3.4 as detailed above, you may want to
+experiment with the <a href="http://fancybox.net/api">different options available</a>.</p>
+
+<p>In that that block of script we inserted in at the bottom of theme.liquid is where you can
+add different options, or change the value of them. Don&#39;t like the overlay?  Just change it&#39;s value
+to false.  Wish people could endlessly cycle through your gallery?  And <code>&#39;cyclic&#39; : true</code> to the list of parameters:</p>
+
+<pre><code>  $(&quot;a.fancy_group&quot;).fancybox({
+    &#39;transitionIn&#39;  : &#39;elastic&#39;,
+    &#39;transitionOut&#39; : &#39;elastic&#39;,
+    &#39;speedIn&#39;   : 600,
+    &#39;speedOut&#39;    : 200,
+
+    &#39;overlayShow&#39; : false,
+    &#39;cyclic&#39; : true
+
+  });
+</code></pre>
+
+<p>Also, now that you have Fancybox installed, you can easily add a lightbox effect
+to other images on your website - not just product images.  We have <a href="http://docs.shopify.com/manual/configuration/store-customization/colors-and-images/add-a-lightbox-to-all-images">documentation
+online here</a> about how to set that up, but you&#39;ve already done about 80% of the work.
+You&#39;ll just need to be sure the images you want lightboxed are wrapped in an <code>&lt;a&gt;</code> tag with the attributes id=&quot;fancy_image&quot; and href=&quot;{{ the url of the image you want to dispaly }}&quot;.</p>
+
+<p>As I said, this customization is fairly involved, so I strongly recommend attempting it on <a href="http://docs.shopify.com/manual/your-website/themes/export-duplicate-delete-themes#duplicate-theme">a duplicate of your theme</a>.</p>
+
+<p>Best of luck!</p>
+    
+  </article>
+</div>
