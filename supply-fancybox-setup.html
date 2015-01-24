@@ -1,8 +1,10 @@
 <style>
 .container{
-  margin-top: 40px;
-  margin-bottom: 40px;
-  max-width: 1170px;  
+  max-width: 860px;
+  margin: 40px auto;
+
+  font-family: sans-serif;
+  line-height: 1.6em;
 }
 
 article{
@@ -17,7 +19,6 @@ img{
 
 code {
 padding: 2px 4px;
-font-size: 90%;
 color: #c7254e;
 background-color: #f9f2f4;
 border-radius: 4px;
@@ -37,21 +38,24 @@ border: 1px solid #ccc;
 border-radius: 4px;
 }
 
+h2{
+  margin-top: 2em;
+}
+
 </style>
 
 <div class="container">
   <article class="col-xs-12">
-<p>Hi, there</p>
+
+<h1>How to add the FancyBox lightbox to the Supply theme</h1>
 
 <p>I&#39;m happy to help everyone with implementing a lightbox effect for their product photos on the Supply theme, but there are a couple items I feel need to be cleared up before we start.</p>
 
 <p>The first being that the Supply theme actually <strong>does not</strong> use Fancybox.  Fancybox is the name of a specific plugin from an author.  A &quot;lightbox&quot; effect is used to showcase product photos and there are a number of plugins that accomplish this like Colorbox, Slimbox or Fancybox.  If you look in the Assets folder once you&#39;ve downloaded the Supply theme, you&#39;ll see that there aren&#39;t any of the same files in there that the fancyApps website says you&#39;ll need. <a href="http://fancyapps.com/fancybox/">http://fancyapps.com/fancybox/</a></p>
 
-<p>The second item is that I won&#39;t be covering how to use the latest version of Fancybox (v 2.1.5) because that is licensed for <strong>non-commercial use</strong>.  Fancy box v2.1.5 is free for personal and non-profit websites - which would rule out the majority of Shopify websites.  If you do want to use the latest version of Fancybox, they have paid-for licensing options: http://sites.fastspring.com/fancyapps/product/store</p>
+<p>Second, the customization below will have the lightbox effect be the default effect for a product feature images.  If you choose to turn on &quot;Enable Image Zoom&quot; from your Customize Theme page, then that will prevent the lightbox effect from happening on click.  So this is a decision between being able to zoom in tight on photos on mouseover, or have them enlarge on click.</p>
 
-<p>Third, the customization below will have the lightbox effect be the default effect for a product feature images.  If you choose to turn on &quot;Enable Image Zoom&quot; from your Customize Theme page, then that will prevent the lightbox effect from happening on click.  So this is a decision between being able to zoom in tight on photos on mouseover, or have them enlarge on click.</p>
-
-<p>The last thing I want to say is that to get Fancybox working with your Supply theme, with the ability to navigate through a gallery, and not sacrifice the option to have the zoom feature
+<p>Third, getting Fancybox working with your Supply theme, with the ability to navigate through a gallery, and not sacrifice the option to have the zoom feature
 for Supply&#39;s product images is going to be a pretty heavy customization.  I have the steps below, and I <strong>strongly recommend</strong> you make these modifications on <a href="http://docs.shopify.com/manual/your-website/themes/export-duplicate-delete-themes#duplicate-theme">a duplicate of your theme</a> and not on your actual published theme.  You may even want to ask someone with a good amount of experience manipulating HTML and Javascript to help you out.  Once you have it working on your duplicate, it&#39;s a simple step to publish it as your public-facing theme.</p>
 
 <p><strong>Final item</strong>: If you choose to make this customization, it will be your responsibility to implement and maintain it. You&#39;ll be making changes to some pretty important files across multiple locations, so a Shopify employee won&#39;t be able to help you fix any issues that come up from implementing this.</p>
@@ -243,6 +247,6 @@ You&#39;ll just need to be sure the images you want lightboxed are wrapped in an
 <p>As I said, this customization is fairly involved, so I strongly recommend attempting it on <a href="http://docs.shopify.com/manual/your-website/themes/export-duplicate-delete-themes#duplicate-theme">a duplicate of your theme</a>.</p>
 
 <p>Best of luck!</p>
-    
+
   </article>
 </div>
